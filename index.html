@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100%; display: block }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script src="js/STLLoader.js"></script>
+		<script src="js/OrbiControls.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+
+            var controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+            var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+            var cube = new THREE.Mesh( geometry, material );
+            //scene.add( cube );
+
+            camera.position.z = 3;
+            camera.position.y = 3;
+            camera.lookAt(scene.position)
+
+            var size = 10;
+            var divisions = 10;
+
+            var gridHelper = new THREE.GridHelper( size, divisions );
+            scene.add( gridHelper );
+
+
+            var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+            scene.add( light );
+
+            var loader = new THREE.STLLoader();
+            //mesh = null;
+            loader.load( 'ressources/main_frame.stl', function (geometry) {
+            //var material = new THREE.TextureLoader (). Load ("js / new / back2.jpg");
+            var mesh = new THREE.Mesh (geometry);
+            mesh.material = new THREE.MeshPhongMaterial( { color: 'skyblue' } );
+            //mesh.scale.set (0.1, 0.1, 0.1);
+            mesh.rotation.set (- Math.PI / 2, 0, Math.PI / 2);
+            //mesh.scale.set (0.3, 0.3, 0.3);
+            mesh.receiveShadow = true;
+            scene.add (mesh);
+            });
+
+            function animate() {
+                //cube.rotation.x += 0.01;
+                //cube.rotation.y += 0.01;
+                requestAnimationFrame( animate );
+                renderer.render( scene, camera );
+            }
+            animate();
+		</script>
+	</body>
+</html>
